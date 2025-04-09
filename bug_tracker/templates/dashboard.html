@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, {{ session['username'] }}!</h1>
+        <a href="{{ url_for('logout') }}">Logout</a>
+
+        <h2>Reported Bugs</h2>
+        {% for bug in bugs %}
+        <div class="bug-card">
+            <strong>{{ bug.title }}</strong>
+            <span class="status {{ bug.status }}">{{ bug.status }}</span>
+            <p>{{ bug.description }}</p>
+            <small>Reported by: {{ bug.reporter }}</small><br>
+            {% if bug.status == 'Open' %}
+            <form action="{{ url_for('close_bug', bug_index=loop.index0) }}" method="POST">
+                <button type="submit">Mark as Closed</button>
+            </form>
+            {% endif %}
+        </div>
+        {% else %}
+        <p>No bugs reported yet.</p>
+        {% endfor %}
+
+        <a href="{{ url_for('report_bug') }}">
+            <button>Report a New Bug</button>
+        </a>
+    </div>
+</body>
+</html>
